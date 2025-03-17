@@ -1,1 +1,15 @@
-[{"id": 1, "type": "client", "name": "Moe", "address_line1": "", "address_line2": "", "address_line3": "", "city": "", "state": "", "zip_code": "", "country": "", "phone_number": ""}]
+[
+  {
+    "id": 1,
+    "type": "client",
+    "name": "",
+    "address_line1": "",
+    "address_line2": "",
+    "address_line3": "",
+    "city": "",
+    "state": "",
+    "zip_code": "",
+    "country": "",
+    "phone_number": ""
+  }
+]

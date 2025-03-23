@@ -1,1 +1,62 @@
-[{"id": 1, "type": "client", "name": "Johnson", "address_line1": "Widyan", "address_line2": "Dubai", "address_line3": "Dubai", "city": "Dubai", "state": "Dubai", "zip_code": "3331", "country": "UAE", "phone_number": "1234"}, {"id": 2, "type": "client", "name": "Hashem", "address_line1": "Dubai", "address_line2": "Dubai", "address_line3": "Dubai", "city": "Dubai", "state": "Dubai", "zip_code": "338", "country": "UAE", "phone_number": "2838"}, {"id": 3, "type": "airline", "company_name": "Zaidos Airline"}, {"id": 4, "type": "airline", "company_name": "Hello airlines"}, {"id": 5, "type": "flight", "client_id": 2, "airline_id": 4, "date": "2025-03-24T00:53:43.179485", "start_city": "Beijing", "end_city": "Abu Dhabi"}, {"id": 6, "type": "client", "name": "Dawg", "address_line1": "Ranches 2", "address_line2": "Yasmin", "address_line3": "38", "city": "Dubai", "state": "Dubai", "zip_code": "3331", "country": "UAE", "phone_number": "23883"}, {"id": 7, "type": "airline", "company_name": "My new airline"}, {"id": 8, "type": "flight", "client_id": 6, "airline_id": 7, "date": "2025-03-24T00:55:11.979933", "start_city": "Auckland", "end_city": "Beijing"}]
+[
+  {
+    "id": 1,
+    "type": "client",
+    "name": "Johnson",
+    "address_line1": "Widyan",
+    "address_line2": "Dubai",
+    "address_line3": "Dubai",
+    "city": "Dubai",
+    "state": "Dubai",
+    "zip_code": "3331",
+    "country": "UAE",
+    "phone_number": "1234"
+  },
+  {
+    "id": 2,
+    "type": "client",
+    "name": "Hashem",
+    "address_line1": "Dubai",
+    "address_line2": "Dubai",
+    "address_line3": "Dubai",
+    "city": "Dubai",
+    "state": "Dubai",
+    "zip_code": "338",
+    "country": "UAE",
+    "phone_number": "2838"
+  },
+  { "id": 3, "type": "airline", "company_name": "Zaidos Airline" },
+  { "id": 4, "type": "airline", "company_name": "Hello airlines" },
+  {
+    "id": 5,
+    "type": "flight",
+    "client_id": 2,
+    "airline_id": 4,
+    "date": "2025-03-24T00:53:43.179485",
+    "start_city": "Beijing",
+    "end_city": "Abu Dhabi"
+  },
+  {
+    "id": 6,
+    "type": "client",
+    "name": "Dawg",
+    "address_line1": "Ranches 2",
+    "address_line2": "Yasmin",
+    "address_line3": "38",
+    "city": "Dubai",
+    "state": "Dubai",
+    "zip_code": "3331",
+    "country": "UAE",
+    "phone_number": "23883"
+  },
+  { "id": 7, "type": "airline", "company_name": "My new airline" },
+  {
+    "id": 8,
+    "type": "flight",
+    "client_id": 6,
+    "airline_id": 7,
+    "date": "2025-03-24T00:55:11.979933",
+    "start_city": "Auckland",
+    "end_city": "Beijing"
+  }
+]

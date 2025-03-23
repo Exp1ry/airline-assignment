@@ -390,6 +390,11 @@ class GUI:
         self.search_flight_end_city = ttk.Entry(form_frame, state='readonly')
         self.search_flight_end_city.grid(row=1, column=1, padx=5, pady=2)
 
+        # Date entry
+        ttk.Label(form_frame, text="Date").grid(row=2, column=0, padx=5, pady=2)
+        self.search_flight_date = ttk.Entry(form_frame, state='readonly')
+        self.search_flight_date.grid(row=2, column=1, padx=5, pady=2)
+
         # Associated IDs
         assoc_frame = ttk.LabelFrame(self.search_form_frame, text="Associated Records")
         assoc_frame.pack(fill='x', padx=5, pady=5)
@@ -577,6 +582,36 @@ class GUI:
         self.search_flight_end_city.delete(0, tk.END)
         self.search_flight_end_city.insert(0, arrival_city)
         self.search_flight_end_city.config(state='readonly')
+
+        # Format and display date
+        date_str = record.get('date', '')
+        if date_str:
+            try:
+                # Handle ISO format date string
+                if 'T' in date_str:
+                    # Split at 'T' and take the first part for date
+                    date_part = date_str.split('T')[0]
+                    time_part = date_str.split('T')[1].split('.')[0]  # Remove milliseconds
+                    # Combine date and time parts
+                    date_str = f"{date_part} {time_part}"
+                
+                # Parse the date string
+                date_obj = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
+                # Format it as Time, Day, Month, Year
+                formatted_date = date_obj.strftime("%H:%M, %d %B %Y")
+                print(f"Formatted date: {formatted_date}")  # Debug log
+            except ValueError as e:
+                print(f"Could not parse date: {date_str}, Error: {e}")  # Debug log
+                formatted_date = date_str
+        else:
+            formatted_date = "No date available"
+            print("No date found in record")  # Debug log
+
+        # Update date field
+        self.search_flight_date.config(state='normal')
+        self.search_flight_date.delete(0, tk.END)
+        self.search_flight_date.insert(0, formatted_date)
+        self.search_flight_date.config(state='readonly')
         
         # Set client ID
         client_id = record.get('client_id', '')

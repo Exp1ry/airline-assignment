@@ -495,7 +495,7 @@ class GUI:
                 'airline_id': airline['id'],
                 'start_city': self.flight_start_city.get(),
                 'end_city': self.flight_end_city.get(),
-                'date': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                # 'date': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }
             
             self.controller.create_record('flight', data)

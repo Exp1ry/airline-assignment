@@ -1,7 +1,24 @@
 from . import BaseModel
 
 class Client(BaseModel):
+    """Model class representing a client in the system.
+    
+    This class manages client information including personal details and address.
+    
+    Attributes:
+        name (str): Full name of the client.
+        address_line1 (str): Primary address line.
+        address_line2 (str): Secondary address line (optional).
+        address_line3 (str): Tertiary address line (optional).
+        city (str): City of residence.
+        state (str): State or province of residence.
+        zip_code (str): Postal or ZIP code.
+        country (str): Country of residence.
+        phone_number (str): Contact phone number.
+    """
+    
     def __init__(self):
+        """Initialize a new Client instance with default values."""
         super().__init__()
         self.name = ""
         self.address_line1 = ""
@@ -14,6 +31,11 @@ class Client(BaseModel):
         self.phone_number = ""
     
     def to_dict(self):
+        """Convert the client instance to a dictionary.
+        
+        Returns:
+            dict: Dictionary containing client data with all fields.
+        """
         return {
             'id': self.id,
             'type': self.type,
@@ -30,6 +52,14 @@ class Client(BaseModel):
     
     @classmethod
     def from_dict(cls, data):
+        """Create a client instance from a dictionary.
+        
+        Args:
+            data (dict): Dictionary containing client data.
+            
+        Returns:
+            Client: New client instance with data from the dictionary.
+        """
         client = cls()
         client.id = data['id']
         client.name = data['name']

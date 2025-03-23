@@ -4,22 +4,54 @@ import json
 import os
 
 class BaseModel(ABC):
+    """Base class for all data models in the application.
+    
+    This abstract base class provides common functionality for all model classes,
+    including ID management, type identification, and record persistence.
+    
+    Attributes:
+        id (int): Unique identifier for the record.
+        type (str): Type of the model (derived from class name).
+    """
+    
     def __init__(self):
+        """Initialize a new BaseModel instance."""
         self.id = None
         self.type = self.__class__.__name__.lower()
     
     @abstractmethod
     def to_dict(self):
+        """Convert the model instance to a dictionary.
+        
+        Returns:
+            dict: Dictionary representation of the model.
+        """
         pass
     
     @classmethod
     @abstractmethod
     def from_dict(cls, data):
+        """Create a model instance from a dictionary.
+        
+        Args:
+            data (dict): Dictionary containing model data.
+            
+        Returns:
+            BaseModel: New instance of the model class.
+        """
         pass
     
     @staticmethod
     def save_records(records, filename):
-        """Save records to a JSON file."""
+        """Save records to a JSON file.
+        
+        Args:
+            records (list): List of record dictionaries to save.
+            filename (str): Path to the JSON file.
+            
+        Note:
+            Automatically converts IDs to integers and formats dates.
+        """
         # Ensure all IDs are integers before saving
         for record in records:
             if 'id' in record:
@@ -43,7 +75,18 @@ class BaseModel(ABC):
     
     @staticmethod
     def load_records(filename):
-        """Load records from a JSON file."""
+        """Load records from a JSON file.
+        
+        Args:
+            filename (str): Path to the JSON file.
+            
+        Returns:
+            list: List of record dictionaries.
+            
+        Note:
+            Handles various encodings and converts string IDs to integers.
+            Returns empty list if file doesn't exist or is invalid.
+        """
         print(f"BaseModel.load_records called with filename: {filename}")
         if not os.path.exists(filename):
             print(f"File does not exist: {filename}")
@@ -97,10 +140,21 @@ class BaseModel(ABC):
                     return []
         except Exception as e:
             print(f"Unexpected error in load_records: {e}")
-            return [] 
+            return []
 
 class Flight(BaseModel):
+    """Model class representing a flight record.
+    
+    Attributes:
+        airline_id (int): ID of the airline operating the flight.
+        client_id (int): ID of the client booking the flight.
+        start_city (str): Departure city of the flight.
+        end_city (str): Arrival city of the flight.
+        date (str): Date and time of the flight.
+    """
+    
     def __init__(self):
+        """Initialize a new Flight instance."""
         super().__init__()
         self.airline_id = None
         self.client_id = None
@@ -109,6 +163,11 @@ class Flight(BaseModel):
         self.date = None
     
     def to_dict(self):
+        """Convert the flight instance to a dictionary.
+        
+        Returns:
+            dict: Dictionary containing flight data with all fields.
+        """
         return {
             'id': self.id,
             'type': self.type,
@@ -121,6 +180,14 @@ class Flight(BaseModel):
     
     @classmethod
     def from_dict(cls, data):
+        """Create a flight instance from a dictionary.
+        
+        Args:
+            data (dict): Dictionary containing flight data.
+            
+        Returns:
+            Flight: New flight instance with data from the dictionary.
+        """
         flight = cls()
         flight.id = data.get('id')
         flight.airline_id = data.get('airline_id')

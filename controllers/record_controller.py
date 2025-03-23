@@ -5,8 +5,9 @@ import os
 
 class RecordController:
     def __init__(self):
-        self.data_dir = "data"
-        self.records_file = os.path.join(self.data_dir, "records.json")
+        """Initialize the record controller."""
+        self.data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data')
+        self.records_file = os.path.join(self.data_dir, 'records.json')
         self.records = []
         self._ensure_data_directory()
         self._load_records()

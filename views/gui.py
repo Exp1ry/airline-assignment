@@ -26,18 +26,6 @@ class GUI:
         "Hong Kong"
     ]
 
-    # Predefined list for airlines
-    AIRLINES = [
-        "Emirates",
-        "British Airways",
-        "American Airlines",
-        "Singapore Airlines",
-        "Qatar Airways",
-        "Air France",
-        "Lufthansa",
-        "Etihad Airways"
-    ]
-
     def __init__(self, controller):
         """Initialize the GUI.
 
@@ -50,22 +38,63 @@ class GUI:
         self.root.geometry("800x600")
         self.setup_gui()
 
+        # Predefined cities for dropdowns
+        self.cities = [
+            "Dubai", "Doha", "Istanbul", "London", "Paris", "Amsterdam",
+            "Singapore", "Hong Kong", "Tokyo", "New York", "Los Angeles",
+            "Sydney", "Mumbai", "Bangkok", "Seoul", "Berlin", "Rome",
+            "Madrid", "Vienna", "Moscow", "Beijing", "Shanghai", "Toronto",
+            "Vancouver", "Auckland", "Cairo", "Dubai", "Abu Dhabi", "Riyadh",
+            "Kuala Lumpur", "Manila", "Jakarta", "Hanoi", "Ho Chi Minh City",
+            "Bangkok", "Phuket", "Seoul", "Busan", "Osaka", "Kyoto",
+            "Helsinki", "Stockholm", "Copenhagen", "Oslo", "Reykjavik",
+            "Dublin", "Edinburgh", "Glasgow", "Belfast", "Cardiff"
+        ]
+        
+        # Sort cities alphabetically
+        self.cities.sort()
+
     def get_airlines(self):
         """Get list of created airlines from the controller.
 
         Returns:
-            list: List of airline names.
+            list: List of airline names with their codes.
         """
         try:
-            records = self.controller.get_records()
-            airlines = [
-                record['company_name'] 
-                for record in records 
-                if record.get('type') == 'airline'
-            ]
-            return sorted(airlines) if airlines else ["No airlines found"]
-        except Exception:
+            airlines = self.controller.get_all_records('airline')
+            if not airlines:
+                return ["No airlines found"]
+            return [f"{airline['company_name']}" for airline in airlines]
+        except Exception as e:
+            print(f"Error getting airlines: {e}")
             return ["No airlines found"]
+
+    def get_clients(self):
+        """Get list of created clients from the controller.
+
+        Returns:
+            list: List of client IDs and names.
+        """
+        try:
+            clients = self.controller.get_all_records('client')
+            if not clients:
+                return ["No clients found"]
+            return [f"{client['id']} - {client['name']}" for client in clients]
+        except Exception as e:
+            print(f"Error getting clients: {e}")
+            return ["No clients found"]
+
+    def refresh_airline_dropdown(self):
+        """Refresh the airline dropdown with current airlines from records."""
+        if hasattr(self, 'flight_airline'):
+            self.flight_airline['values'] = self.get_airlines()
+            self.flight_airline.set('')  # Clear current selection
+
+    def refresh_client_dropdown(self):
+        """Refresh the client dropdown with current clients from records."""
+        if hasattr(self, 'flight_client'):
+            self.flight_client['values'] = self.get_clients()
+            self.flight_client.set('')  # Clear current selection
 
     def setup_gui(self):
         """Set up the main GUI components including the notebook and tabs."""
@@ -236,24 +265,38 @@ class GUI:
         form_frame = ttk.LabelFrame(self.create_form_frame, text="Flight Information")
         form_frame.pack(fill='x', padx=5, pady=5)
 
-        # Client ID field
-        ttk.Label(form_frame, text="Client ID*").grid(row=0, column=0, padx=5, pady=2)
-        self.flight_client_id = ttk.Entry(form_frame)
-        self.flight_client_id.grid(row=0, column=1, padx=5, pady=2)
+        # Client dropdown
+        ttk.Label(form_frame, text="Client*").grid(row=0, column=0, padx=5, pady=2)
+        self.flight_client = ttk.Combobox(form_frame, values=self.get_clients())
+        self.flight_client.grid(row=0, column=1, padx=5, pady=2)
+
+        # Refresh button for client dropdown
+        ttk.Button(
+            form_frame,
+            text="Refresh Clients",
+            command=self.refresh_client_dropdown
+        ).grid(row=0, column=2, padx=5, pady=2)
 
         # Airline dropdown
         ttk.Label(form_frame, text="Airline*").grid(row=1, column=0, padx=5, pady=2)
-        self.flight_airline = ttk.Combobox(form_frame, values=self.AIRLINES)
+        self.flight_airline = ttk.Combobox(form_frame, values=self.get_airlines())
         self.flight_airline.grid(row=1, column=1, padx=5, pady=2)
+
+        # Refresh button for airline dropdown
+        ttk.Button(
+            form_frame,
+            text="Refresh Airlines",
+            command=self.refresh_airline_dropdown
+        ).grid(row=1, column=2, padx=5, pady=2)
 
         # Start city dropdown
         ttk.Label(form_frame, text="Start City*").grid(row=2, column=0, padx=5, pady=2)
-        self.flight_start_city = ttk.Combobox(form_frame, values=self.CITIES)
+        self.flight_start_city = ttk.Combobox(form_frame, values=self.cities)
         self.flight_start_city.grid(row=2, column=1, padx=5, pady=2)
 
         # End city dropdown
         ttk.Label(form_frame, text="End City*").grid(row=3, column=0, padx=5, pady=2)
-        self.flight_end_city = ttk.Combobox(form_frame, values=self.CITIES)
+        self.flight_end_city = ttk.Combobox(form_frame, values=self.cities)
         self.flight_end_city.grid(row=3, column=1, padx=5, pady=2)
 
         ttk.Button(
@@ -337,22 +380,14 @@ class GUI:
         # Create entry fields
         self.search_flight_entries = {}
 
-        # Start city dropdown
+        # Start city entry
         ttk.Label(form_frame, text="Start City").grid(row=0, column=0, padx=5, pady=2)
-        self.search_flight_start_city = ttk.Combobox(
-            form_frame,
-            values=self.CITIES,
-            state='readonly'
-        )
+        self.search_flight_start_city = ttk.Entry(form_frame, state='readonly')
         self.search_flight_start_city.grid(row=0, column=1, padx=5, pady=2)
 
-        # End city dropdown
+        # End city entry
         ttk.Label(form_frame, text="End City").grid(row=1, column=0, padx=5, pady=2)
-        self.search_flight_end_city = ttk.Combobox(
-            form_frame,
-            values=self.CITIES,
-            state='readonly'
-        )
+        self.search_flight_end_city = ttk.Entry(form_frame, state='readonly')
         self.search_flight_end_city.grid(row=1, column=1, padx=5, pady=2)
 
         # Associated IDs
@@ -427,8 +462,8 @@ class GUI:
 
     def create_flight(self):
         """Create a new flight record."""
-        if not self.flight_client_id.get().strip():
-            messagebox.showerror("Validation Error", "Please enter the client ID")
+        if not self.flight_client.get():
+            messagebox.showerror("Validation Error", "Please select a client")
             return
         if not self.flight_airline.get():
             messagebox.showerror("Validation Error", "Please select an airline")
@@ -441,18 +476,33 @@ class GUI:
             return
 
         try:
+            # Get client ID from selection
+            client_selection = self.flight_client.get().strip()
+            client_id = int(client_selection.split(' - ')[0])
+            
+            # Get airline ID from selection
+            airline_name = self.flight_airline.get().strip()
+            airlines = self.controller.get_all_records('airline')
+            airline = next((a for a in airlines if a['company_name'] == airline_name), None)
+            
+            if not airline:
+                messagebox.showerror("Error", "Selected airline not found")
+                return
+
+            # Create the flight data
             data = {
-                'client_id': int(self.flight_client_id.get().strip()),
-                'airline': self.flight_airline.get(),
+                'client_id': client_id,
+                'airline_id': airline['id'],
                 'start_city': self.flight_start_city.get(),
                 'end_city': self.flight_end_city.get(),
                 'date': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }
+            
             self.controller.create_record('flight', data)
             messagebox.showinfo("Success", "Flight record created successfully!")
             self.show_create_form()  # Reset the form
         except ValueError:
-            messagebox.showerror("Error", "Please enter a valid client ID")
+            messagebox.showerror("Error", "Invalid client selection")
         except Exception as e:
             messagebox.showerror("Error", str(e))
 
@@ -503,17 +553,43 @@ class GUI:
 
     def display_flight_record(self, record):
         """Display flight record in the search form."""
-        self.search_flight_start_city.set(record.get('start_city', ''))
-        self.search_flight_end_city.set(record.get('end_city', ''))
+        print(f"Displaying flight record: {record}")  # Debug log
         
+        # Get airline name for display
+        airlines = self.controller.get_all_records('airline')
+        airline = next((a for a in airlines if a['id'] == record.get('airline_id')), None)
+        airline_name = airline['company_name'] if airline else "Unknown Airline"
+        print(f"Found airline: {airline_name}")  # Debug log
+
+        # Set city values
+        departure_city = record.get('start_city', '')
+        arrival_city = record.get('end_city', '')
+        print(f"Departure city: {departure_city}, Arrival city: {arrival_city}")  # Debug log
+        
+        # Update departure city
+        self.search_flight_start_city.config(state='normal')
+        self.search_flight_start_city.delete(0, tk.END)
+        self.search_flight_start_city.insert(0, departure_city)
+        self.search_flight_start_city.config(state='readonly')
+        
+        # Update arrival city
+        self.search_flight_end_city.config(state='normal')
+        self.search_flight_end_city.delete(0, tk.END)
+        self.search_flight_end_city.insert(0, arrival_city)
+        self.search_flight_end_city.config(state='readonly')
+        
+        # Set client ID
+        client_id = record.get('client_id', '')
+        print(f"Client ID: {client_id}")  # Debug log
         self.search_flight_client_id.config(state='normal')
         self.search_flight_client_id.delete(0, tk.END)
-        self.search_flight_client_id.insert(0, str(record.get('client_id', '')))
+        self.search_flight_client_id.insert(0, str(client_id))
         self.search_flight_client_id.config(state='readonly')
 
+        # Set airline name
         self.search_flight_airline.config(state='normal')
         self.search_flight_airline.delete(0, tk.END)
-        self.search_flight_airline.insert(0, str(record.get('airline', '')))
+        self.search_flight_airline.insert(0, airline_name)
         self.search_flight_airline.config(state='readonly')
 
     def update_record(self):

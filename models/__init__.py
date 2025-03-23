@@ -19,6 +19,7 @@ class BaseModel(ABC):
     
     @staticmethod
     def save_records(records, filename):
+        """Save records to a JSON file."""
         # Ensure all IDs are integers before saving
         for record in records:
             if 'id' in record:
@@ -27,8 +28,18 @@ class BaseModel(ABC):
                 record['client_id'] = int(record['client_id'])
             if 'airline_id' in record:
                 record['airline_id'] = int(record['airline_id'])
+            # Handle date fields
+            if 'date' in record:
+                if isinstance(record['date'], datetime):
+                    record['date'] = record['date'].strftime("%Y-%m-%d %H:%M:%S")
+            if 'departure_date' in record:
+                if isinstance(record['departure_date'], datetime):
+                    record['departure_date'] = record['departure_date'].strftime("%Y-%m-%d %H:%M:%S")
+            if 'arrival_date' in record:
+                if isinstance(record['arrival_date'], datetime):
+                    record['arrival_date'] = record['arrival_date'].strftime("%Y-%m-%d %H:%M:%S")
         with open(filename, 'w') as f:
-            json.dump(records, f, default=str)
+            json.dump(records, f)
     
     @staticmethod
     def load_records(filename):
@@ -87,3 +98,34 @@ class BaseModel(ABC):
         except Exception as e:
             print(f"Unexpected error in load_records: {e}")
             return [] 
+
+class Flight(BaseModel):
+    def __init__(self):
+        super().__init__()
+        self.airline_id = None
+        self.client_id = None
+        self.start_city = None
+        self.end_city = None
+        self.date = None
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'type': self.type,
+            'airline_id': self.airline_id,
+            'client_id': self.client_id,
+            'start_city': self.start_city,
+            'end_city': self.end_city,
+            'date': str(self.date) if self.date else None
+        }
+    
+    @classmethod
+    def from_dict(cls, data):
+        flight = cls()
+        flight.id = data.get('id')
+        flight.airline_id = data.get('airline_id')
+        flight.client_id = data.get('client_id')
+        flight.start_city = data.get('start_city')
+        flight.end_city = data.get('end_city')
+        flight.date = data.get('date')
+        return flight 

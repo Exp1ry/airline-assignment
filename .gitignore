@@ -1,4 +1,5 @@
 controllers/__pycache__
 models/__pycache__
 views/__pycache__
+tests/__pycache__
 data/records.json

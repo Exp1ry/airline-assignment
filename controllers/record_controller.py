@@ -1,7 +1,8 @@
+import os
 from models.client import Client
 from models.airline import Airline
 from models.flight import Flight
-import os
+
 
 class RecordController:
     def __init__(self):

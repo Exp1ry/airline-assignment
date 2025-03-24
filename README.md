@@ -27,29 +27,31 @@ airline/
 
 ## Requirements
 
-- Python 3.x
-- tkinter (usually comes with Python)
+- Python 3.x (includes tkinter in standard library)
 - pytest (for running tests)
 - python-dateutil
 
 ## Installation
 
 1. Clone the repository
+   ```
+   git clone https://github.com/Exp1ry/airline-assignment.git
+   ```
 2. Install dependencies:
    ```bash
-   pip install -r requirements.txt
+   python3 -m pip install -r requirements.txt
    ```
 
 ## Running the Application
 
 ```bash
-python main.py
+python3 main.py
 ```
 
 ## Running Tests
 
 ```bash
-pytest tests/
+python3 -m pytest tests/
 ```
 
 ## Record Formats
@@ -83,4 +85,3 @@ pytest tests/
 - Date: datetime
 - Start City: str
 - End City: str
--

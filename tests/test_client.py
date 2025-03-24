@@ -2,6 +2,14 @@ import pytest
 from models.client import Client
 
 def test_client_creation():
+    """Test the creation of a new Client instance.
+    
+    Verifies that:
+    1. The ID is initially None
+    2. The type is set to 'client'
+    3. All address fields are empty strings
+    4. All contact information fields are empty strings
+    """
     client = Client()
     assert client.id is None
     assert client.type == 'client'
@@ -16,6 +24,14 @@ def test_client_creation():
     assert client.phone_number == ""
 
 def test_client_to_dict():
+    """Test the conversion of a Client instance to a dictionary.
+    
+    Verifies that:
+    1. The ID is correctly converted
+    2. The type is preserved
+    3. All address fields are correctly stored
+    4. All contact information fields are correctly stored
+    """
     client = Client()
     client.id = 1
     client.name = "John Doe"
@@ -38,6 +54,15 @@ def test_client_to_dict():
     assert data['phone_number'] == "555-0123"
 
 def test_client_from_dict():
+    """Test the creation of a Client instance from a dictionary.
+    
+    Verifies that:
+    1. The ID is correctly loaded
+    2. The type is preserved
+    3. All address fields are correctly loaded
+    4. All contact information fields are correctly loaded
+    5. Optional address fields (line2, line3) are handled properly
+    """
     data = {
         'id': 1,
         'type': 'client',
